@@ -1,5 +1,5 @@
 Vue.component('logview', {
-    template: '<div class="log-view"></div>',
+    template: '<div class="log-view log-view-wrapped"></div>',
     props: ["linesOfHistory"],
     data: function() {
         return {
@@ -22,6 +22,9 @@ Vue.component('logview', {
         },
         toggleWrapLines: function(val) {
             this.$el.classList.toggle('log-view-wrapped', val);
+        },
+        changeFont: function (val){
+            this.$el.style.color = val;
         },
         createSpan: function (innerHtml, classNames) {
             var span = document.createElement('span');

@@ -3,6 +3,7 @@ Vue.component('vue-loading', window.VueLoading);
 
 var apiURL = endsWith(window.relativeRoot, '/') ? 'ws' : '/ws';
 var apiURL = [window.location.protocol, '//', window.location.host, window.relativeRoot, apiURL].join('');
+document.documentElement.style.setProperty("--mainColor", localStorage.getItem("userThemeColor"));
 
 var app = new Vue({
     el: '#app',
@@ -19,9 +20,11 @@ var app = new Vue({
         'command': null,
         'script': null,
 
-        'linesOfHistory': 2000,  // 0 for infinite history
+        'linesOfHistory': 200,  // 0 for infinite history
         'linesToTail': 10,
-        'wrapLines': false,
+        'wrapLines': true,
+        'font': 'black',
+        'theme': '#1a1a1a',
 
         'hideToolbar': false,
         'showConfig': false,
@@ -49,7 +52,7 @@ var app = new Vue({
         clearLogview: function () {
             this.$refs.logview.clearLines();
         },
-        backendConnect: function ( ){
+        backendConnect: function () {
             console.log('connecting to ' + apiURL);
             this.showLoadingOverlay = true;
             this.socket = new SockJS(apiURL);
@@ -113,19 +116,26 @@ var app = new Vue({
         }
     },
     watch: {
-        isConnected: function(val) {
+        isConnected: function (val) {
             this.showLoadingOverlay = !val;
         },
-        wrapLines: function(val) {
+        wrapLines: function (val) {
             this.$refs.logview.toggleWrapLines(val);
         },
-        command: function(val) {
+        font: function (val) {
+            this.$refs.logview.changeFont(val);
+        },
+        theme: function (val) {
+            document.documentElement.style.setProperty("--mainColor", val);
+            localStorage.setItem("userThemeColor", val);
+        },
+        command: function (val) {
             if (val && this.isConnected) {
                 this.script = this.commandScripts[val];
                 this.notifyBackend();
             }
         },
-        file: function(val) {
+        file: function (val) {
             if (val && this.isConnected) {
                 this.notifyBackend();
             }
