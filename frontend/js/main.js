@@ -4,6 +4,7 @@ Vue.component('vue-loading', window.VueLoading);
 var apiURL = endsWith(window.relativeRoot, '/') ? 'ws' : '/ws';
 var apiURL = [window.location.protocol, '//', window.location.host, window.relativeRoot, apiURL].join('');
 document.documentElement.style.setProperty("--mainColor", localStorage.getItem("userThemeColor"));
+document.documentElement.style.setProperty("--textColor", localStorage.getItem("userTextColor"));
 
 var app = new Vue({
     el: '#app',
@@ -124,6 +125,8 @@ var app = new Vue({
         },
         font: function (val) {
             this.$refs.logview.changeFont(val);
+            document.documentElement.style.setProperty("--textColor", val);
+            localStorage.setItem("userTextColor", val);
         },
         theme: function (val) {
             document.documentElement.style.setProperty("--mainColor", val);
